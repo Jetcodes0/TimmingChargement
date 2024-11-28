@@ -116,7 +116,7 @@ Les cellules du fichier Excel sont colorées en fonction des valeurs calculées 
 
 ## Licence
 
-Ce projet est sous licence **MIT**. Vous êtes libre de l'utiliser, de le modifier et de le distribuer selon les termes de la licence.
+Ce projet est sous licence **BY-NC**. Voir les termes de la licence.
 
 ---
 
