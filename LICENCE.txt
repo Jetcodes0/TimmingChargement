@@ -1,0 +1,9 @@
+MIT License
+
+Copyright (c) 2024 BORDONADO Yanis
+
+Par la présente, il est accordé, gratuitement, à toute personne acquérant une copie de ce logiciel et des fichiers associés (le "Logiciel"), de traiter dans le Logiciel sans restriction, y compris sans limitation les droits de l'utiliser, de le copier, de le modifier, de fusionner, de publier, de distribuer, de sous-licencier et/ou de vendre des copies du Logiciel, et d'autoriser les personnes auxquelles le Logiciel est fourni à faire de même, sous réserve des conditions suivantes :
+
+L'avis de droit d'auteur ci-dessus et cet avis de licence doivent être inclus dans toutes les copies ou parties substantielles du Logiciel.
+
+LE LOGICIEL EST FOURNI "EN L'ÉTAT", SANS AUCUNE GARANTIE D'AUCUNE SORTE, EXPRESSE OU IMPLICITE, Y COMPRIS MAIS SANS S'Y LIMITER LES GARANTIES DE COMMERCIALISATION, D'ADÉQUATION À UN BUT PARTICULIER ET DE NON-VIOLATION. EN AUCUN CAS L'AUTEUR OU LES DÉTENTEURS DU DROIT D'AUTEUR NE POURRONT ÊTRE TENUS RESPONSABLES DE TOUTE RÉCLAMATION, DOMMAGE OU AUTRE RESPONSABILITÉ, QU'ELLE SOIT EN ACTION DE CONTRAT, DE TORT OU AUTRE, DÉCOULANT DE, OU EN RELATION AVEC LE LOGICIEL OU L'UTILISATION OU AUTRES TRANSACTIONS DANS LE LOGICIEL.
