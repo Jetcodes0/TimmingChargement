@@ -261,6 +261,11 @@ class Application(ctk.CTk):
         for col in range(len(self.df_principales.columns)):
             inner_frame.grid_columnconfigure(col, weight=1)
 
+        # Ajouter des lignes et colonnes supplémentaires à la grille pour centrer le tableau
+        # Ajuster les lignes et colonnes pour occuper l'espace et centrer
+        inner_frame.grid_rowconfigure(0, weight=1)
+        inner_frame.grid_columnconfigure(len(self.df_principales.columns) // 2, weight=1)
+
         # Mettre à jour la taille du canevas pour ajuster au contenu
         inner_frame.update_idletasks()
         canvas.config(scrollregion=canvas.bbox("all"))
@@ -274,6 +279,7 @@ class Application(ctk.CTk):
         # Bouton pour fermer la fenêtre
         button_close = ctk.CTkButton(preview_window, text="Retour", command=preview_window.destroy)
         button_close.pack(pady=10)
+
 
 
 
