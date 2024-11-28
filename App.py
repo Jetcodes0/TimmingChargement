@@ -195,7 +195,7 @@ class Application(ctk.CTk):
         # Créer une nouvelle fenêtre pour l'aperçu
         preview_window = Toplevel(self)
         preview_window.title("Aperçu des données")
-        preview_window.geometry("800x400")
+        preview_window.geometry("800x600")  # Ajustez cette taille selon votre besoin
 
         # Conteneur principal avec barre de défilement
         container = ctk.CTkFrame(preview_window)
@@ -211,7 +211,8 @@ class Application(ctk.CTk):
 
         # Frame intérieure pour afficher le contenu
         inner_frame = ctk.CTkFrame(canvas)
-        canvas.create_window((0, 0), window=inner_frame, anchor="nw")
+        canvas.create_window((canvas.winfo_width() // 2, canvas.winfo_height() // 2), window=inner_frame, anchor="center")
+
 
         # Créer les en-têtes de colonnes avec bordures
         for i, column in enumerate(self.df_principales.columns):
@@ -261,10 +262,16 @@ class Application(ctk.CTk):
         for col in range(len(self.df_principales.columns)):
             inner_frame.grid_columnconfigure(col, weight=1)
 
-        # Ajouter des lignes et colonnes supplémentaires à la grille pour centrer le tableau
-        # Ajuster les lignes et colonnes pour occuper l'espace et centrer
-        inner_frame.grid_rowconfigure(0, weight=1)
-        inner_frame.grid_columnconfigure(len(self.df_principales.columns) // 2, weight=1)
+        # Centrer le tableau dans la fenêtre
+        # Configuration de la grille intérieure pour occuper tout l'espace
+        inner_frame.grid_rowconfigure(0, weight=1)  # Premier row a du poids
+        inner_frame.grid_columnconfigure(0, weight=1)  # Premier column a du poids
+
+        # Ajouter un padding autour du tableau pour centrer son contenu
+        for row in range(1, len(self.df_principales) + 1):
+            inner_frame.grid_rowconfigure(row, weight=1)
+        for col in range(len(self.df_principales.columns)):
+            inner_frame.grid_columnconfigure(col, weight=1)
 
         # Mettre à jour la taille du canevas pour ajuster au contenu
         inner_frame.update_idletasks()
@@ -279,6 +286,7 @@ class Application(ctk.CTk):
         # Bouton pour fermer la fenêtre
         button_close = ctk.CTkButton(preview_window, text="Retour", command=preview_window.destroy)
         button_close.pack(pady=10)
+
 
 
 
