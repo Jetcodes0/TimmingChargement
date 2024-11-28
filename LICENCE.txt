@@ -1,9 +1,14 @@
-MIT License
+Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)
 
-Copyright (c) 2024 BORDONADO Yanis
+Vous êtes libre de :
 
-Par la présente, il est accordé, gratuitement, à toute personne acquérant une copie de ce logiciel et des fichiers associés (le "Logiciel"), de traiter dans le Logiciel sans restriction, y compris sans limitation les droits de l'utiliser, de le copier, de le modifier, de fusionner, de publier, de distribuer, de sous-licencier et/ou de vendre des copies du Logiciel, et d'autoriser les personnes auxquelles le Logiciel est fourni à faire de même, sous réserve des conditions suivantes :
+- Partager — copier et redistribuer le matériel dans n'importe quel format ou support.
+- Modifier — remixer, transformer, et construire sur le matériel pour toute utilisation non commerciale.
 
-L'avis de droit d'auteur ci-dessus et cet avis de licence doivent être inclus dans toutes les copies ou parties substantielles du Logiciel.
+Sous les conditions suivantes :
 
-LE LOGICIEL EST FOURNI "EN L'ÉTAT", SANS AUCUNE GARANTIE D'AUCUNE SORTE, EXPRESSE OU IMPLICITE, Y COMPRIS MAIS SANS S'Y LIMITER LES GARANTIES DE COMMERCIALISATION, D'ADÉQUATION À UN BUT PARTICULIER ET DE NON-VIOLATION. EN AUCUN CAS L'AUTEUR OU LES DÉTENTEURS DU DROIT D'AUTEUR NE POURRONT ÊTRE TENUS RESPONSABLES DE TOUTE RÉCLAMATION, DOMMAGE OU AUTRE RESPONSABILITÉ, QU'ELLE SOIT EN ACTION DE CONTRAT, DE TORT OU AUTRE, DÉCOULANT DE, OU EN RELATION AVEC LE LOGICIEL OU L'UTILISATION OU AUTRES TRANSACTIONS DANS LE LOGICIEL.
+- **Attribution** — Vous devez donner crédit de manière appropriée, fournir un lien vers la licence, et indiquer si des modifications ont été apportées. Vous pouvez le faire de manière raisonnable, mais pas d'une manière qui suggère que vous avez l'approbation de l'auteur ou que vous soutenez l'utilisation.
+
+- **Pas d'utilisation commerciale** — Vous ne pouvez pas utiliser ce matériel à des fins commerciales.
+
+La licence complète est disponible ici : https://creativecommons.org/licenses/by-nc/4.0/
