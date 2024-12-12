@@ -41,6 +41,15 @@ class Application(ctk.CTk):
         self.entry_date_heure = ctk.CTkEntry(self, placeholder_text="Entrez la date et l'heure", width=250)
         self.entry_date_heure.pack(pady=5)
 
+        self.entry_heure_pauses = ctk.CTkLabel(self, text="Heure de pauses (HH:MM,HH:MM,...):", font=("Arial", 14))
+        self.entry_heure_pauses.pack(pady=5)
+
+        self.entry_heure_pauses = ctk.CTkEntry(self, placeholder_text="Entrez les pauses", width=250)
+        self.entry_heure_pauses.pack(pady=5)
+
+
+
+
         # Nouveau champ pour le préfixe
         self.label_prefixe = ctk.CTkLabel(self, text="Préfixe pour le fichier final :", font=("Arial", 14))
         self.label_prefixe.pack(pady=5)
@@ -66,6 +75,25 @@ class Application(ctk.CTk):
             messagebox.showinfo("Succès", f"Fichier sélectionné : {self.fichier_excel}")
         else:
             messagebox.showerror("Erreur", "Aucun fichier sélectionné.")
+    def get_pauses(self):
+        # Récupérer le contenu de l'entrée
+        pauses_text = self.entry_heure_pauses.get()
+        
+        # Convertir en tableau (liste) en séparant par les virgules
+        pauses_list = pauses_text.split(',')
+
+        # Transformer chaque plage horaire en tuple (start_time, end_time)
+        pauses = []
+        for pause in pauses_list:
+            if '-' in pause:
+                start, end = pause.split('-')
+                pauses.append((start.strip(), end.strip()))
+            else:
+                print(f"Format incorrect pour la pause: {pause}")
+        
+        print("Heures de pause sous forme de tuples:", pauses)
+        return pauses
+
 
     def lancer_traitement(self):
         try:
@@ -79,6 +107,7 @@ class Application(ctk.CTk):
 
             # Charger et traiter le fichier Excel
             self.traiter_fichier_excel()
+            self.get_pauses()
 
             messagebox.showinfo("Succès", "Le traitement du fichier a été effectué avec succès.")
 
@@ -86,6 +115,25 @@ class Application(ctk.CTk):
             messagebox.showerror("Erreur", f"Entrée invalide : {ve}")
         except Exception as e:
             messagebox.showerror("Erreur", f"Une erreur s'est produite : {e}")
+    
+
+    def ajuster_pour_pauses(self,current_datetime, heures_restantes, pauses):
+        fin_datetime = current_datetime + timedelta(hours=heures_restantes)
+        for pause_start, pause_end in pauses:
+            # Convertir les heures de pause en datetime
+            pause_debut = current_datetime.replace(hour=int(pause_start.split(":")[0]), 
+                                                minute=int(pause_start.split(":")[1]), 
+                                                second=0)
+            pause_fin = current_datetime.replace(hour=int(pause_end.split(":")[0]), 
+                                                minute=int(pause_end.split(":")[1]), 
+                                                second=0)
+            
+            # Si la période de travail chevauche la pause
+            if current_datetime < pause_fin and fin_datetime > pause_debut:
+                # Ajouter la durée de la pause
+                fin_datetime += pause_fin - pause_debut
+    
+        return fin_datetime
 
     def traiter_fichier_excel(self):
         """
@@ -126,21 +174,22 @@ class Application(ctk.CTk):
 
         heures_de_fin = []
         previous_chargement = None
+        pauses = self.get_pauses()
 
         for i, row in df_principales.iterrows():
             chargement_value = row[0]
             
             if previous_chargement == "Sous-Total":
                 heures_restantes = row['Heures nécessaires']
-                fin_datetime = date_heure + timedelta(hours=heures_restantes)
+                fin_datetime = self.ajuster_pour_pauses(date_heure, heures_restantes, pauses)
                 heures_de_fin.append(fin_datetime.strftime("%Y-%m-%d %H:%M:%S"))
                 current_datetime = fin_datetime
             else:
                 heures_restantes = row['Heures nécessaires']
-                fin_datetime = current_datetime + timedelta(hours=heures_restantes)
+                fin_datetime = self.ajuster_pour_pauses(current_datetime, heures_restantes, pauses)
                 heures_de_fin.append(fin_datetime.strftime("%Y-%m-%d %H:%M:%S"))
                 current_datetime = fin_datetime
-            
+
             previous_chargement = chargement_value
 
         df_principales['Heures de fin'] = heures_de_fin
