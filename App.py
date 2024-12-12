@@ -175,15 +175,29 @@ class Application(ctk.CTk):
         heures_de_fin = []
         previous_chargement = None
         pauses = self.get_pauses()
+        cptT = 0
 
         for i, row in df_principales.iterrows():
             chargement_value = row[0]
             
-            if previous_chargement == "Sous-Total":
+            if previous_chargement == "Sous-Total" and cptT <2 :
+                heures_restantes = row['Heures nécessaires']
+                fin_datetime = self.ajuster_pour_pauses(current_datetime, heures_restantes, pauses)
+                heures_de_fin.append(fin_datetime.strftime("%Y-%m-%d %H:%M:%S"))
+                current_datetime = fin_datetime
+                cptT+=1
+            elif previous_chargement == "Sous-Total" and cptT ==2:
                 heures_restantes = row['Heures nécessaires']
                 fin_datetime = self.ajuster_pour_pauses(date_heure, heures_restantes, pauses)
                 heures_de_fin.append(fin_datetime.strftime("%Y-%m-%d %H:%M:%S"))
                 current_datetime = fin_datetime
+                cptT+=1
+            elif previous_chargement == "Sous-Total" and cptT >2:
+                heures_restantes = row['Heures nécessaires']
+                fin_datetime = self.ajuster_pour_pauses(current_datetime, heures_restantes, pauses)
+                heures_de_fin.append(fin_datetime.strftime("%Y-%m-%d %H:%M:%S"))
+                current_datetime = fin_datetime
+                cptT+=1
             else:
                 heures_restantes = row['Heures nécessaires']
                 fin_datetime = self.ajuster_pour_pauses(current_datetime, heures_restantes, pauses)
