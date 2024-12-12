@@ -117,23 +117,36 @@ class Application(ctk.CTk):
             messagebox.showerror("Erreur", f"Une erreur s'est produite : {e}")
     
 
-    def ajuster_pour_pauses(self,current_datetime, heures_restantes, pauses):
+    
+
+    def ajuster_pour_pauses(self, current_datetime, heures_restantes, pauses):
+        """
+        Ajuste le temps restant pour tenir compte des pauses.
+        """
+        # Calculer l'heure de fin de travail avant d'ajouter les pauses
         fin_datetime = current_datetime + timedelta(hours=heures_restantes)
+        
         for pause_start, pause_end in pauses:
             # Convertir les heures de pause en datetime
             pause_debut = current_datetime.replace(hour=int(pause_start.split(":")[0]), 
-                                                minute=int(pause_start.split(":")[1]), 
-                                                second=0)
+                                                    minute=int(pause_start.split(":")[1]), 
+                                                    second=0)
             pause_fin = current_datetime.replace(hour=int(pause_end.split(":")[0]), 
                                                 minute=int(pause_end.split(":")[1]), 
                                                 second=0)
             
+            # Si la fin de la pause est avant le début (cela signifie que la pause traverse minuit)
+            if pause_fin < pause_debut:
+                # Ajouter un jour à la fin de la pause pour la gérer correctement
+                pause_fin += timedelta(days=1)
+
             # Si la période de travail chevauche la pause
             if current_datetime < pause_fin and fin_datetime > pause_debut:
                 # Ajouter la durée de la pause
                 fin_datetime += pause_fin - pause_debut
-    
+        
         return fin_datetime
+
 
     def traiter_fichier_excel(self):
         """
@@ -164,6 +177,11 @@ class Application(ctk.CTk):
         colonnes_a_garder = ['Chargement ', 'Date Chargement', 'Nb Prépa', 'UVC à préparer', 'UVC Prépa Validées']
         df_principales = df_principales[colonnes_a_garder]
 
+        # Supprimer les lignes où 'Chargement ' == 'Sous-Total'
+        df_principales = df_principales[df_principales['Chargement ']!= 'Sous-Total']
+        df_principales = df_principales[df_principales['Date Chargement'] >= self.date_heure_debut]
+
+
         # Calculer UVC restants et heures nécessaires
         df_principales['UVC Restants'] = df_principales['UVC à préparer'] - df_principales['UVC Prépa Validées']
         df_principales['Heures nécessaires'] = df_principales['UVC Restants'] / self.production_par_heure
@@ -180,29 +198,11 @@ class Application(ctk.CTk):
         for i, row in df_principales.iterrows():
             chargement_value = row[0]
             
-            if previous_chargement == "Sous-Total" and cptT <2 :
-                heures_restantes = row['Heures nécessaires']
-                fin_datetime = self.ajuster_pour_pauses(current_datetime, heures_restantes, pauses)
-                heures_de_fin.append(fin_datetime.strftime("%Y-%m-%d %H:%M:%S"))
-                current_datetime = fin_datetime
-                cptT+=1
-            elif previous_chargement == "Sous-Total" and cptT ==2:
-                heures_restantes = row['Heures nécessaires']
-                fin_datetime = self.ajuster_pour_pauses(date_heure, heures_restantes, pauses)
-                heures_de_fin.append(fin_datetime.strftime("%Y-%m-%d %H:%M:%S"))
-                current_datetime = fin_datetime
-                cptT+=1
-            elif previous_chargement == "Sous-Total" and cptT >2:
-                heures_restantes = row['Heures nécessaires']
-                fin_datetime = self.ajuster_pour_pauses(current_datetime, heures_restantes, pauses)
-                heures_de_fin.append(fin_datetime.strftime("%Y-%m-%d %H:%M:%S"))
-                current_datetime = fin_datetime
-                cptT+=1
-            else:
-                heures_restantes = row['Heures nécessaires']
-                fin_datetime = self.ajuster_pour_pauses(current_datetime, heures_restantes, pauses)
-                heures_de_fin.append(fin_datetime.strftime("%Y-%m-%d %H:%M:%S"))
-                current_datetime = fin_datetime
+            
+            heures_restantes = row['Heures nécessaires']
+            fin_datetime = self.ajuster_pour_pauses(current_datetime, heures_restantes, pauses)
+            heures_de_fin.append(fin_datetime.strftime("%Y-%m-%d %H:%M:%S"))
+            current_datetime = fin_datetime
 
             previous_chargement = chargement_value
 
