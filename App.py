@@ -41,7 +41,7 @@ class Application(ctk.CTk):
         self.entry_date_heure = ctk.CTkEntry(self, placeholder_text="Entrez la date et l'heure", width=250)
         self.entry_date_heure.pack(pady=5)
 
-        self.entry_heure_pauses = ctk.CTkLabel(self, text="Heure de pauses (HH:MM,HH:MM,...):", font=("Arial", 14))
+        self.entry_heure_pauses = ctk.CTkLabel(self, text="Heure de pauses (HH:MM-HH:MM,HH:MM-HH:MM,...):", font=("Arial", 14))
         self.entry_heure_pauses.pack(pady=5)
 
         self.entry_heure_pauses = ctk.CTkEntry(self, placeholder_text="Entrez les pauses", width=250)
