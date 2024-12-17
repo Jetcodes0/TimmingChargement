@@ -5,7 +5,9 @@ from tkinter import filedialog, messagebox, Toplevel
 from openpyxl import load_workbook
 from openpyxl.styles import PatternFill
 from datetime import datetime, timedelta
-#useless.py
+from tkcalendar import Calendar
+from tktimepicker import AnalogPicker, timepicker, AnalogThemes
+
 # Initialiser l'application
 ctk.set_appearance_mode("System")  # Options : "Light", "Dark", "System"
 ctk.set_default_color_theme("blue")  # Options : "blue", "green", "dark-blue"
@@ -35,10 +37,16 @@ class Application(ctk.CTk):
         self.entry_production = ctk.CTkEntry(self, placeholder_text="Entrez une valeur", width=250)
         self.entry_production.pack(pady=5)
 
-        self.label_date_heure = ctk.CTkLabel(self, text="Date/Heure de début (YYYY-MM-DD HH:MM:SS):", font=("Arial", 14))
+        self.label_date_heure = ctk.CTkLabel(self, text="Date/Heure de début:", font=("Arial", 14))
         self.label_date_heure.pack(pady=5)
 
-        self.entry_date_heure = ctk.CTkEntry(self, placeholder_text="Entrez la date et l'heure", width=250)
+        self.button_select_date = ctk.CTkButton(self, text="Sélectionner la date", command=self.ouvrir_calendrier)
+        self.button_select_date.pack(pady=5)
+
+        self.button_select_time = ctk.CTkButton(self, text="Sélectionner l'heure", command=self.ouvrir_horloge)
+        self.button_select_time.pack(pady=5)
+
+        self.entry_date_heure = ctk.CTkEntry(self, placeholder_text="YYYY-MM-DD HH:MM:SS", width=250)
         self.entry_date_heure.pack(pady=5)
 
         self.entry_heure_pauses = ctk.CTkLabel(self, text="Heure de pauses (HH:MM-HH:MM,HH:MM-HH:MM,...):", font=("Arial", 14))
@@ -47,10 +55,6 @@ class Application(ctk.CTk):
         self.entry_heure_pauses = ctk.CTkEntry(self, placeholder_text="Entrez les pauses", width=250)
         self.entry_heure_pauses.pack(pady=5)
 
-
-
-
-        # Nouveau champ pour le préfixe
         self.label_prefixe = ctk.CTkLabel(self, text="Préfixe pour le fichier final :", font=("Arial", 14))
         self.label_prefixe.pack(pady=5)
 
@@ -65,6 +69,37 @@ class Application(ctk.CTk):
 
         self.label_copyright = ctk.CTkLabel(self, text="© Yanis Bordonado - Tous droits réservés", font=("Arial", 12), anchor="e")
         self.label_copyright.pack(side="bottom", anchor="se", pady=10, padx=10)
+
+    def ouvrir_calendrier(self):
+        def choisir_date():
+            date_selectionnee = cal.selection_get().strftime("%Y-%m-%d")
+            self.entry_date_heure.insert(0, date_selectionnee + " ")
+            fenetre_calendrier.destroy()
+
+        fenetre_calendrier = Toplevel(self)
+        fenetre_calendrier.title("Sélectionner une date")
+        cal = Calendar(fenetre_calendrier, date_pattern="yyyy-mm-dd")
+        cal.pack(pady=10)
+        btn_choisir = ctk.CTkButton(fenetre_calendrier, text="Valider", command=choisir_date)
+        btn_choisir.pack(pady=10)
+
+    def ouvrir_horloge(self):
+        def choisir_heure():
+            heure_selectionnee = horloge.time()
+            heure_formatee = f"{heure_selectionnee.hour:02}:{heure_selectionnee.minute:02}:00"
+            self.entry_date_heure.insert(len(self.entry_date_heure.get()), heure_formatee)
+            fenetre_horloge.destroy()
+            
+
+        fenetre_horloge = Toplevel(self)
+        fenetre_horloge.title("Sélectionner l'heure")
+        horloge = AnalogPicker(fenetre_horloge)
+        horloge.pack(pady=10)
+        btn_choisir = ctk.CTkButton(fenetre_horloge, text="Valider", command=choisir_heure)
+        btn_choisir.pack(pady=10)
+        theme = AnalogThemes(horloge)
+        theme.setDracula()  # Exemple : Thème "Dracula"
+        
 
     def demander_fichier(self):
         self.fichier_excel = filedialog.askopenfilename(
