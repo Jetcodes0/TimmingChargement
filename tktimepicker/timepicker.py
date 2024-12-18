@@ -391,6 +391,16 @@ class AnalogThemes:
 
         self.time_picker.configSeparator(font=("Times", 18, "bold"), width=1)
 
+    def setLightBlueTheme(self):
+        self.time_picker.configAnalog(headcolor="#4682B4", handcolor="#4682B4", bg="#F0F0F0",
+                                    clickedcolor="#000000", textcolor="#000000", canvas_bg="#FFFFFF",
+                                    alttextwidth=2, bdwidth=0)
+
+        self.time_picker.configSpin(bg="#FFFFFF", height=1, fg="#000000", font=("Times", 16), hoverbg="#87CEEB",
+                                    hovercolor="#4682B4", clickedbg="#E0E0E0", clickedcolor="#4682B4")
+
+        self.time_picker.configSeparator(font=("Times", 18, "bold"), width=1)
+
     def setPurple(self):
         self.time_picker.configAnalog(headcolor="#ee333d", handcolor="#ee333d", bg="#71135c",
                                       clickedcolor="#ffffff", textcolor="#ffffff", canvas_bg="#4e0d3a",

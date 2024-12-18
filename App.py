@@ -114,7 +114,7 @@ class Application(ctk.CTk):
         btn_choisir = ctk.CTkButton(fenetre_horloge, text="Valider", command=choisir_heure)
         btn_choisir.pack(pady=10)
         theme = AnalogThemes(horloge)
-        theme.setDracula()  # Exemple : Thème "Dracula"
+        theme.setLightBlueTheme()  # Exemple : Thème "Lightblue"
         
 
     def demander_fichier(self):
