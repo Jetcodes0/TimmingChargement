@@ -85,10 +85,26 @@ class Application(ctk.CTk):
 
     def ouvrir_horloge(self):
         def choisir_heure():
-            heure_selectionnee = horloge.time()
-            heure_formatee = f"{heure_selectionnee.hour:02}:{heure_selectionnee.minute:02}:00"
+            heure_selectionnee = horloge.time()  # Retourne un tuple (hour, minute, period)
+            print("Valeur sélectionnée :", heure_selectionnee)  # Debugging
+            
+            heure, minute, periode = heure_selectionnee
+            
+            # Ajuster l'heure en fonction de la période
+            if periode == 'Après-midi' and heure != 12:  # 12h PM reste inchangé, sinon ajoute 12
+                heure += 12
+            elif periode == 'Matin' and heure == 12:  # 12h AM devient 00h
+                heure = 0
+            
+            # Formater l'heure en HH:MM:SS
+            heure_formatee = f"{heure:02}:{minute:02}:00"
+            
+            # Insérer l'heure formatée dans le champ
             self.entry_date_heure.insert(len(self.entry_date_heure.get()), heure_formatee)
+            
+            # Fermer la fenêtre de sélection de l'heure
             fenetre_horloge.destroy()
+
             
 
         fenetre_horloge = Toplevel(self)
