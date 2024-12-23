@@ -37,20 +37,20 @@ class Application(ctk.CTk):
         self.entry_production = ctk.CTkEntry(self, placeholder_text="Entrez une valeur", width=250)
         self.entry_production.pack(pady=5)
 
-        self.label_date_heure = ctk.CTkLabel(self, text="Date/Heure de début:", font=("Arial", 14))
-        self.label_date_heure.pack(pady=5)
+        # self.label_date_heure = ctk.CTkLabel(self, text="Date/Heure de début:", font=("Arial", 14))
+        # self.label_date_heure.pack(pady=5)
 
-        self.button_select_date = ctk.CTkButton(self, text="Sélectionner la date", command=self.ouvrir_calendrier)
+        self.button_select_date = ctk.CTkButton(self, text="Sélectionner la date et l'heure", command=self.ouvrir_calendrier , width=250)
         self.button_select_date.pack(pady=5)
-
-        self.button_select_time = ctk.CTkButton(self, text="Sélectionner l'heure", command=self.ouvrir_horloge)
-        self.button_select_time.pack(pady=5)
 
         self.entry_date_heure = ctk.CTkEntry(self, placeholder_text="YYYY-MM-DD HH:MM:SS", width=250)
         self.entry_date_heure.pack(pady=5)
 
-        self.entry_heure_pauses = ctk.CTkLabel(self, text="Heure de pauses (HH:MM-HH:MM,HH:MM-HH:MM,...):", font=("Arial", 14))
-        self.entry_heure_pauses.pack(pady=5)
+        # self.entry_heure_pauses = ctk.CTkLabel(self, text="Heure de pauses (HH:MM-HH:MM,HH:MM-HH:MM,...):", font=("Arial", 14))
+        # self.entry_heure_pauses.pack(pady=5)
+
+        self.button_select_date = ctk.CTkButton(self, text="Sélectionner les heures de pauses", command=self.pausescomp , width=250)
+        self.button_select_date.pack(pady=5)    
 
         self.entry_heure_pauses = ctk.CTkEntry(self, placeholder_text="Entrez les pauses", width=250)
         self.entry_heure_pauses.pack(pady=5)
@@ -75,6 +75,7 @@ class Application(ctk.CTk):
             date_selectionnee = cal.selection_get().strftime("%Y-%m-%d")
             self.entry_date_heure.insert(0, date_selectionnee + " ")
             fenetre_calendrier.destroy()
+            self.ouvrir_horloge()
 
         fenetre_calendrier = Toplevel(self)
         fenetre_calendrier.title("Sélectionner une date")
@@ -82,6 +83,9 @@ class Application(ctk.CTk):
         cal.pack(pady=10)
         btn_choisir = ctk.CTkButton(fenetre_calendrier, text="Valider", command=choisir_date)
         btn_choisir.pack(pady=10)
+
+    
+        
 
     def ouvrir_horloge(self):
         def choisir_heure():
@@ -115,6 +119,70 @@ class Application(ctk.CTk):
         btn_choisir.pack(pady=10)
         theme = AnalogThemes(horloge)
         theme.setLightBlueTheme()  # Exemple : Thème "Lightblue"
+
+    def pausescomp(self):
+    
+        self.horloge_count = 0  # Compteur pour suivre combien de fenêtres ont été ouvertes
+
+        def ouvrir_heurloge():
+            if self.horloge_count >= 2:
+                return  # Ne rien faire si deux horloges ont déjà été ouvertes
+
+            def choisir_heure():
+                heure_selectionnee = horloge.time()  # Retourne un tuple (hour, minute, period)
+                print("Valeur sélectionnée :", heure_selectionnee)  # Debugging
+                
+                heure, minute, periode = heure_selectionnee
+                
+                # Ajuster l'heure en fonction de la période
+                if periode == 'Après-midi' and heure != 12:  # 12h PM reste inchangé, sinon ajoute 12
+                    heure += 12
+                elif periode == 'Matin' and heure == 12:  # 12h AM devient 00h
+                    heure = 0
+                
+                # Formater l'heure en HH:MM:SS
+                heure_formatee = f"{heure:02}:{minute:02}"
+                
+                # Ajouter une virgule si le champ n'est pas vide, mais uniquement avant une nouvelle pause
+              
+
+                # Vérifier s'il s'agit de la première ou de la deuxième pause
+                if self.horloge_count == 1:
+                    # Compléter la pause existante avec un tiret suivi de la deuxième heure
+                    self.entry_heure_pauses.insert(len(self.entry_heure_pauses.get()), f"-{heure_formatee}")
+                else:
+                    # Insérer la première pause
+                    self.entry_heure_pauses.insert(len(self.entry_heure_pauses.get()), heure_formatee)
+
+                # Fermer la fenêtre de sélection de l'heure
+                fenetre_horloge.destroy()
+
+                # Incrémenter le compteur
+                self.horloge_count += 1
+
+                # Si moins de deux heures ont été choisies, ouvrir une autre horloge
+                if self.horloge_count < 2:
+                    ouvrir_heurloge()
+
+            fenetre_horloge = Toplevel(self)
+            fenetre_horloge.title("Sélectionner l'heure")
+            horloge = AnalogPicker(fenetre_horloge)
+            horloge.pack(pady=10)
+            btn_choisir = ctk.CTkButton(fenetre_horloge, text="Valider", command=choisir_heure)
+            btn_choisir.pack(pady=10)
+            theme = AnalogThemes(horloge)
+            theme.setLightBlueTheme()  # Exemple : Thème "Lightblue"
+
+        # Ajouter une virgule si le champ est déjà rempli avant d'insérer une nouvelle pause
+        if self.entry_heure_pauses.get():
+            self.entry_heure_pauses.insert(len(self.entry_heure_pauses.get()), ",")
+
+        ouvrir_heurloge()
+
+
+
+
+
         
 
     def demander_fichier(self):
@@ -400,13 +468,6 @@ class Application(ctk.CTk):
         # Bouton pour fermer la fenêtre
         button_close = ctk.CTkButton(preview_window, text="Retour", command=preview_window.destroy)
         button_close.pack(pady=10)
-
-
-
-
-
-
-
 
 # Lancer l'application
 if __name__ == "__main__":
